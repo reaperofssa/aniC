@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Battle - Admin Panel</title>
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #000000;
+    min-height: 100vh;
+    color: white;
+    overflow-x: hidden;
+}
+
+.background-grid {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridMove 20s linear infinite;
+    z-index: -1;
+}
+
+@keyframes gridMove {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
+}
+
+.header {
+    background: rgba(0, 0, 0, 0.95);
+    border-bottom: 2px solid #333;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(20px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header h1 {
+    font-size: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    color: #ff6b6b;
+}
+
+.nav {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.nav-btn {
+    padding: 0.8rem 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid #333;
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.nav-btn:hover {
+    background: white;
+    color: black;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+}
+
+.main-content {
+    padding: 2rem;
+    max-width: 1600px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 2rem;
+}
+
+.admin-warning {
+    background: rgba(255, 0, 0, 0.1);
+    color: #ff6666;
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin: 2rem auto;
+    border: 2px solid rgba(255, 0, 0, 0.3);
+    text-align: center;
+    max-width: 800px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    animation: warningPulse 2s ease-in-out infinite;
+}
+
+@keyframes warningPulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(255, 0, 0, 0.3); }
+    50% { box-shadow: 0 0 40px rgba(255, 0, 0, 0.6); }
+}
+
+.admin-card {
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #333;
+    border-radius: 25px;
+    padding: 3rem;
+    backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+    animation: cardSlide 0.8s ease-out;
+    transition: all 0.3s ease;
+}
+
+@keyframes cardSlide {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.admin-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.admin-card:hover::before {
+    left: 100%;
+}
+
+.admin-card:hover {
+    border-color: white;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+    transform: translateY(-5px);
+}
+
+.admin-card h2 {
+    margin-bottom: 2rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.form-group {
+    margin-bottom: 2rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.8rem;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #333;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.form-input::placeholder {
+    color: #666;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: white;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.admin-btn {
+    width: 100%;
+    padding: 1.5rem;
+    border: none;
+    border-radius: 15px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.admin-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+}
+
+.admin-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.grant-premium-btn {
+    background: rgba(255, 0, 255, 0.2);
+    border: 2px solid #ff00ff;
+}
+
+.grant-premium-btn:hover {
+    background: #ff00ff;
+    color: black;
+}
+
+.add-currency-btn {
+    background: rgba(0, 255, 0, 0.2);
+    border: 2px solid #00ff00;
+}
+
+.add-currency-btn:hover {
+    background: #00ff00;
+    color: black;
+}
+
+.grant-character-btn {
+    background: rgba(0, 0, 255, 0.2);
+    border: 2px solid #0066ff;
+}
+
+.grant-character-btn:hover {
+    background: #0066ff;
+    color: white;
+}
+
+.danger-btn {
+    background: rgba(255, 0, 0, 0.2);
+    border: 2px solid #ff0000;
+}
+
+.danger-btn:hover {
+    background: #ff0000;
+    color: white;
+}
+
+.warning-btn {
+    background: rgba(255, 165, 0, 0.2);
+    border: 2px solid #ffa500;
+}
+
+.warning-btn:hover {
+    background: #ffa500;
+    color: black;
+}
+
+.success-message {
+    background: rgba(0, 255, 0, 0.1);
+    color: #00ff00;
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 1.5rem;
+    border: 2px solid rgba(0, 255, 0, 0.3);
+    text-align: center;
+    animation: messageSlide 0.5s ease-out;
+}
+
+.error-message {
+    background: rgba(255, 0, 0, 0.1);
+    color: #ff6666;
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 1.5rem;
+    border: 2px solid rgba(255, 0, 0, 0.3);
+    text-align: center;
+    animation: messageSlide 0.5s ease-out;
+}
+
+@keyframes messageSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.currency-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.character-preview {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #333;
+    border-radius: 15px;
+    animation: previewSlide 0.3s ease-out;
+}
+
+@keyframes previewSlide {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.character-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 15px;
+    border: 2px solid white;
+    animation: imageFloat 3s ease-in-out infinite;
+}
+
+@keyframes imageFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+}
+
+.character-info {
+    flex: 1;
+}
+
+.character-name {
+    font-weight: bold;
+    color: white;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.character-id {
+    color: #ccc;
+    font-size: 1rem;
+}
+
+.current-spin-character, .event-character {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid #333;
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 1.5rem;
+    animation: specialCardGlow 3s ease-in-out infinite;
+}
+
+@keyframes specialCardGlow {
+    0%, 100% { border-color: #333; }
+    50% { border-color: white; }
+}
+
+.store-items {
+    max-height: 350px;
+    overflow-y: auto;
+    margin-top: 1.5rem;
+}
+
+.store-item {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #333;
+    border-radius: 15px;
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+    animation: storeItemSlide 0.5s ease-out;
+}
+
+@keyframes storeItemSlide {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.store-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(10px);
+    border-color: white;
+}
+
+.store-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    border: 2px solid white;
+}
+
+.store-item-info {
+    flex: 1;
+}
+
+.store-item-name {
+    font-weight: bold;
+    color: white;
+    margin-bottom: 0.3rem;
+}
+
+.store-item-price {
+    color: #00ff00;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+/* Mobile Responsive */
+@media (max-width: 1024px) {
+    .main-content {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+    
+    .header {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+    
+    .nav {
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .currency-inputs {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-card {
+        padding: 2rem;
+    }
+    
+    .character-preview {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .store-item {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .nav-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .admin-card {
+        padding: 1.5rem;
+    }
+    
+    .admin-warning {
+        margin: 1rem;
+        padding: 1rem;
+        font-size: 1rem;
+    }
+    
+    .character-image {
+        width: 60px;
+        height: 60px;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="background-grid"></div>
+    <div class="header">
+        <h1>⚙️ Admin Panel</h1>
+        <nav class="nav">
+            <a href="lobby.html" class="nav-btn">🏠 Lobby</a>
+            <a href="profile.html" class="nav-btn">👤 Profile</a>
+            <a href="vault.html" class="nav-btn">🏛️ Vault</a>
+            <a href="shop.html" class="nav-btn">🛒 Shop</a>
+        </nav>
+    </div>
+
+    <div class="admin-warning">
+        ⚠️ <strong>ADMIN PANEL</strong> - Use these tools responsibly ⚠️
+    </div>
+
+    <div class="main-content">
+        <!-- Grant Premium Status -->
+        <div class="admin-card">
+            <h2>👑 Grant Premium Status</h2>
+            <div id="premiumMessage"></div>
+            <form id="premiumForm">
+                <div class="form-group">
+                    <label for="premiumUserId">User ID</label>
+                    <input type="text" id="premiumUserId" class="form-input" placeholder="Enter user ID" required>
+                </div>
+                <button type="submit" class="admin-btn grant-premium-btn">
+                    👑 Grant Premium
+                </button>
+            </form>
+        </div>
+
+        <!-- Add Currency -->
+        <div class="admin-card">
+            <h2>💰 Add Currency</h2>
+            <div id="currencyMessage"></div>
+            <form id="currencyForm">
+                <div class="form-group">
+                    <label for="currencyUserId">User ID</label>
+                    <input type="text" id="currencyUserId" class="form-input" placeholder="Enter user ID" required>
+                </div>
+                <div class="currency-inputs">
+                    <div class="form-group">
+                        <label for="coinsAmount">Coins</label>
+                        <input type="number" id="coinsAmount" class="form-input" placeholder="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="diamondsAmount">Diamonds</label>
+                        <input type="number" id="diamondsAmount" class="form-input" placeholder="0" min="0">
+                    </div>
+                </div>
+                <button type="submit" class="admin-btn add-currency-btn">
+                    💰 Add Currency
+                </button>
+            </form>
+        </div>
+
+        <!-- Grant Character -->
+        <div class="admin-card">
+            <h2>🎭 Grant Character</h2>
+            <div id="characterMessage"></div>
+            <form id="characterForm">
+                <div class="form-group">
+                    <label for="characterUserId">User ID</label>
+                    <input type="text" id="characterUserId" class="form-input" placeholder="Enter user ID" required>
+                </div>
+                <div class="form-group">
+                    <label for="characterId">Character ID</label>
+                    <input type="number" id="characterId" class="form-input" placeholder="Enter character ID" required min="1">
+                </div>
+                <div id="characterPreview"></div>
+                <button type="submit" class="admin-btn grant-character-btn">
+                    🎭 Grant Character
+                </button>
+            </form>
+        </div>
+
+        <!-- Spin Character Management -->
+        <div class="admin-card">
+            <h2>🎰 Spin Character</h2>
+            <div id="spinMessage"></div>
+            <div class="current-spin-character" id="currentSpinCharacter">
+                Loading current spin character...
+            </div>
+            <form id="spinForm">
+                <div class="form-group">
+                    <label for="spinCharacterId">New Character ID</label>
+                    <input type="number" id="spinCharacterId" class="form-input" placeholder="Enter character ID" required min="1">
+                </div>
+                <div class="form-group">
+                    <label for="spinCharacterName">Character Name</label>
+                    <input type="text" id="spinCharacterName" class="form-input" placeholder="Enter character name" required>
+                </div>
+                <button type="submit" class="admin-btn warning-btn">
+                    🎰 Change Spin Character
+                </button>
+            </form>
+        </div>
+
+        <!-- Event Management -->
+        <div class="admin-card">
+            <h2>🎉 Event Management</h2>
+            <div id="eventMessage"></div>
+            <div class="event-character" id="currentEventCharacter">
+                Loading current event...
+            </div>
+            <form id="eventForm">
+                <div class="form-group">
+                    <label for="eventCharacterId">Event Character ID</label>
+                    <input type="number" id="eventCharacterId" class="form-input" placeholder="Enter character ID" required min="1">
+                </div>
+                <div class="form-group">
+                    <label for="eventCharacterName">Character Name</label>
+                    <input type="text" id="eventCharacterName" class="form-input" placeholder="Enter character name" required>
+                </div>
+                <button type="submit" class="admin-btn warning-btn">
+                    🎉 Set Event Character
+                </button>
+            </form>
+        </div>
+
+        <!-- Store Management -->
+        <div class="admin-card">
+            <h2>🛒 Store Management</h2>
+            <div id="storeMessage"></div>
+            <form id="storeForm">
+                <div class="form-group">
+                    <label for="storeCharacterId">Character ID</label>
+                    <input type="number" id="storeCharacterId" class="form-input" placeholder="Enter character ID" required min="1">
+                </div>
+                <div class="form-group">
+                    <label for="storeCharacterName">Character Name</label>
+                    <input type="text" id="storeCharacterName" class="form-input" placeholder="Enter character name" required>
+                </div>
+                <div class="form-group">
+                    <label for="storePrice">Price (Diamonds)</label>
+                    <input type="number" id="storePrice" class="form-input" placeholder="Enter price" required min="1">
+                </div>
+                <button type="submit" class="admin-btn add-currency-btn">
+                    🛒 Add to Store
+                </button>
+            </form>
+            <div class="store-items" id="storeItems">
+                Loading store items...
+            </div>
+        </div>
+
+        <!-- Auction Management -->
+        <div class="admin-card">
+            <h2>🏺 Auction Management</h2>
+            <div id="auctionMessage"></div>
+            <form id="auctionForm">
+                <div class="form-group">
+                    <label for="auctionCharacterId">Character ID</label>
+                    <input type="number" id="auctionCharacterId" class="form-input" placeholder="Enter character ID" required min="1">
+                </div>
+                <div class="form-group">
+                    <label for="auctionStartPrice">Start Price (Coins)</label>
+                    <input type="number" id="auctionStartPrice" class="form-input" placeholder="Enter start price" required min="1">
+                </div>
+                <button type="submit" class="admin-btn warning-btn">
+                    🏺 Start Auction
+                </button>
+            </form>
+        </div>
+
+        <!-- Dangerous Actions -->
+        <div class="admin-card">
+            <h2>⚠️ Dangerous Actions</h2>
+            <div id="dangerMessage"></div>
+            <div class="form-group">
+                <label for="banUserId">Ban User ID</label>
+                <input type="text" id="banUserId" class="form-input" placeholder="Enter user ID to ban">
+            </div>
+            <button class="admin-btn danger-btn" onclick="banUser()">
+                🔨 Ban User
+            </button>
+            <button class="admin-btn danger-btn" onclick="resetRanks()">
+                🔄 Reset All Ranks
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Sound effects
+const playSound = (type) => {
+    const audio = new Audio();
+    switch(type) {
+        case 'click':
+            audio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTuR2O/Eeyw';
+            break;
+        case 'success':
+            audio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTuR2O/Eeyw';
+            break;
+        case 'error':
+            audio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTuR2O/Eeyw';
+            break;
+    }
+    audio.volume = 0.3;
+    audio.play().catch(() => {});
+};
+
+// Add click sound to all buttons
+document.addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON' || e.target.classList.contains('nav-btn')) {
+        playSound('click');
+    }
+});
+        const authToken = localStorage.getItem('authToken');
+        
+        if (!authToken) {
+            window.location.href = 'login.html';
+        }
+
+        // Check if user is admin
+        async function checkAdminAccess() {
+            try {
+                const response = await fetch('/profile', {
+                    headers: { 'Authorization': authToken }
+                });
+                
+                if (response.ok) {
+                    const profile = await response.json();
+                    if (profile.username !== 'Reiker') {
+                        alert('Access denied. Admin privileges required.');
+                        window.location.href = 'lobby.html';
+                    }
+                } else {
+                    window.location.href = 'login.html';
+                }
+            } catch (error) {
+                window.location.href = 'login.html';
+            }
+        }
+
+        function showMessage(elementId, message, isError = false) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="${isError ? 'error-message' : 'success-message'}">${message}</div>`;
+            setTimeout(() => {
+                element.innerHTML = '';
+            }, 5000);
+        }
+
+        // Grant Premium Status
+        document.getElementById('premiumForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const userId = document.getElementById('premiumUserId').value;
+            
+            try {
+                const response = await fetch('/admin/grant-premium', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': authToken
+                    },
+                    body: JSON.stringify({ userId })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('premiumMessage', data.message);
+                    document.getElementById('premiumUserId').value = '';
+                } else {
+                    showMessage('premiumMessage', data.error, true);
+                }
+            } catch (error) {
+                showMessage('premiumMessage', 'Network error occurred', true);
+            }
+        });
+
+        // Add Currency
+        document.getElementById('currencyForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const userId = document.getElementById('currencyUserId').value;
+            const coins = parseInt(document.getElementById('coinsAmount').value) || 0;
+            const diamonds = parseInt(document.getElementById('diamondsAmount').value) || 0;
+            
+            if (coins === 0 && diamonds === 0) {
+                showMessage('currencyMessage', 'Please enter at least one currency amount', true);
+                return;
+            }
+            
+            try {
+                const response = await fetch('/admin/add-currency', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': authToken
+                    },
+                    body: JSON.stringify({ userId, coins, diamonds })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('currencyMessage', data.message);
+                    document.getElementById('currencyForm').reset();
+                } else {
+                    showMessage('currencyMessage', data.error, true);
+                }
+            } catch (error) {
+                showMessage('currencyMessage', 'Network error occurred', true);
+            }
+        });
+
+        // Grant Character
+        document.getElementById('characterForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const userId = document.getElementById('characterUserId').value;
+            const characterId = parseInt(document.getElementById('characterId').value);
+            
+            try {
+                const response = await fetch('/admin/grant-character', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': authToken
+                    },
+                    body: JSON.stringify({ userId, characterId })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('characterMessage', data.message);
+                    document.getElementById('characterForm').reset();
+                    document.getElementById('characterPreview').innerHTML = '';
+                } else {
+                    showMessage('characterMessage', data.error, true);
+                }
+            } catch (error) {
+                showMessage('characterMessage', 'Network error occurred', true);
+            }
+        });
+
+        // Character preview
+        document.getElementById('characterId').addEventListener('input', (e) => {
+            const characterId = e.target.value;
+            const preview = document.getElementById('characterPreview');
+            
+            if (characterId && characterId > 0) {
+                preview.innerHTML = `
+                    <div class="character-preview">
+                        <img src="https://reaperxxxx-animepfp.hf.space/img?q=${characterId}" 
+                             class="character-image" alt="Character ${characterId}">
+                        <div class="character-info">
+                            <div class="character-name">Character ${characterId}</div>
+                            <div class="character-id">ID: ${characterId}</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                preview.innerHTML = '';
+            }
+        });
+
+        // Change Spin Character
+        document.getElementById('spinForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const characterId = parseInt(document.getElementById('spinCharacterId').value);
+            const characterName = document.getElementById('spinCharacterName').value;
+            
+            try {
+                const response = await fetch('/admin/change-spin-character', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': authToken
+                    },
+                    body: JSON.stringify({ characterId, characterName })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('spinMessage', data.message);
+                    document.getElementById('spinForm').reset();
+                    loadCurrentSpinCharacter();
+                } else {
+                    showMessage('spinMessage', data.error, true);
+                }
+            } catch (error) {
+                showMessage('spinMessage', 'Network error occurred', true);
+            }
+        });
+
+        // Set Event Character
+        document.getElementById('eventForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const characterId = parseInt(document.getElementById('eventCharacterId').value);
+            const characterName = document.getElementById('eventCharacterName').value;
+            
+            try {
+                const response = await fetch('/admin/set-event-character', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': authToken
+                    },
+                    body: JSON.stringify({ characterId, characterName })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('eventMessage', data.message);
+                    document.getElementById('eventForm').reset();
+                    loadCurrentEvent();
+                } else {
+                    showMessage('eventMessage', data.error, true);
+                }
+            } catch (error) {
+                showMessage('eventMessage', 'Network error occurred', true);
+            }
+        });
+
+        // Add to Store
+        document.getElementById('storeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const characterId = parseInt(document.getElementById('storeCharacterId').value);
+            const characterName = document.getElementById('storeCharacterName').value;
+            const price = parseInt(document.getElementById('storePrice').value);
+            
+            try {
+                const response = await fetch('/admin/add-store-character', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': authToken
+                    },
+                    body: JSON.stringify({ characterId, characterName, price })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('storeMessage', data.message);
+                    document.getElementById('storeForm').reset();
+                    loadStore();
+                } else {
+                    showMessage('storeMessage', data.error, true);
+                }
+            } catch (error) {
+                showMessage('storeMessage', 'Network error occurred', true);
+            }
+        });
+
+        // Start Auction
+        document.getElementById('auctionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const characterId = parseInt(document.getElementById('auctionCharacterId').value);
+            const startPrice = parseInt(document.getElementById('auctionStartPrice').value);
+            
+            try {
+                const response = await fetch('/admin/start-auction', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': authToken
+                    },
+                    body: JSON.stringify({ characterId, startPrice })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('auctionMessage', data.message);
+                    document.getElementById('auctionForm').reset();
+                } else {
+                    showMessage('auctionMessage', data.error, true);
+                }
+            } catch (error) {
+                showMessage('auctionMessage', 'Network error occurred', true);
+            }
+        });
+
+        // Ban User
+        async function banUser() {
+            const userId = document.getElementById('banUserId').value;
+            
+            if (!userId) {
+                showMessage('dangerMessage', 'Please enter a user ID', true);
+                return;
+            }
+            
+            if (!confirm(`Are you sure you want to ban user ${userId}? This action cannot be undone.`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/admin/ban-user', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': authToken
+                    },
+                    body: JSON.stringify({ userId })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('dangerMessage', data.message);
+                    document.getElementById('banUserId').value = '';
+                } else {
+                    showMessage('dangerMessage', data.error, true);
+                }
+            } catch (error) {
+                showMessage('dangerMessage', 'Network error occurred', true);
+            }
+        }
+
+        // Reset Ranks
+        async function resetRanks() {
+            if (!confirm('Are you sure you want to reset ALL user ranks to Bronze? This action cannot be undone.')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('/admin/reset-ranks', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': authToken
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage('dangerMessage', data.message);
+                } else {
+                    showMessage('dangerMessage', data.error, true);
+                }
+            } catch (error) {
+                showMessage('dangerMessage', 'Network error occurred', true);
+            }
+        }
+
+        // Load current spin character (simulated)
+        function loadCurrentSpinCharacter() {
+            document.getElementById('currentSpinCharacter').innerHTML = `
+                <div class="character-preview">
+                    <img src="https://reaperxxxx-animepfp.hf.space/img?q=22" 
+                         class="character-image" alt="Current Spin Character">
+                    <div class="character-info">
+                        <div class="character-name">Current Spin Character</div>
+                        <div class="character-id">ID: 22</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Load current event
+        async function loadCurrentEvent() {
+            try {
+                const response = await fetch('/event', {
+                    headers: { 'Authorization': authToken }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const eventDiv = document.getElementById('currentEventCharacter');
+                    
+                    if (data.character) {
+                        eventDiv.innerHTML = `
+                            <div class="character-preview">
+                                <img src="https://reaperxxxx-animepfp.hf.space/img?q=${data.character.id}" 
+                                     class="character-image" alt="${data.character.name}">
+                                <div class="character-info">
+                                    <div class="character-name">${data.character.name}</div>
+                                    <div class="character-id">ID: ${data.character.id}</div>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        eventDiv.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.7);">No active event character</div>';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading event:', error);
+            }
+        }
+
+        // Load store items
+        async function loadStore() {
+            try {
+                const response = await fetch('/store', {
+                    headers: { 'Authorization': authToken }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const storeDiv = document.getElementById('storeItems');
+                    
+                    if (data.store.length === 0) {
+                        storeDiv.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.7);">No items in store</div>';
+                    } else {
+                        storeDiv.innerHTML = data.store.map(item => `
+                            <div class="store-item">
+                                <img src="https://reaperxxxx-animepfp.hf.space/img?q=${item.id}" alt="${item.name}">
+                                <div class="store-item-info">
+                                    <div class="store-item-name">${item.name}</div>
+                                    <div class="store-item-price">💎 ${item.price} diamonds</div>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading store:', error);
+            }
+        }
+
+        // Initialize admin panel
+        checkAdminAccess();
+        loadCurrentSpinCharacter();
+        loadCurrentEvent();
+        loadStore();
+    </script>
+</body>
+</html>
