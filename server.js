@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs');
+const path = require('path');
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const app = express();
