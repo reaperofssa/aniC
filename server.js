@@ -6,6 +6,7 @@ const app = express();
 const PORT = 7860;
 
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
 const USERS_FILE = 'users.json';
 const CHARACTERS_FILE = 'characters.json';
@@ -752,6 +753,11 @@ app.post('/claim-event-character', (req, res) => {
     saveEvent(event);
 
     res.json({ message: `Successfully claimed event character ${event.character.name} (ID: ${event.character.id}).` });
+});
+
+// Route for serving login.html on "/"
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'login.html'));
 });
 
 // Protected route: Get character upgrades
