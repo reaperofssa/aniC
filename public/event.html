@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Battle - Event</title>
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #000000;
+    min-height: 100vh;
+    color: white;
+    overflow-x: hidden;
+}
+
+.background-grid {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridMove 20s linear infinite;
+    z-index: -1;
+}
+
+@keyframes gridMove {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
+}
+
+.header {
+    background: rgba(0, 0, 0, 0.95);
+    border-bottom: 2px solid #333;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(20px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header h1 {
+    font-size: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    background: linear-gradient(45deg, #ff6b6b, #ffd700, #ff6b6b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: eventTitleGlow 3s ease-in-out infinite;
+}
+
+@keyframes eventTitleGlow {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.5); }
+}
+
+.nav {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.nav-btn {
+    padding: 0.8rem 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid #333;
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.nav-btn:hover {
+    background: white;
+    color: black;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+}
+
+.event-banner {
+    background: linear-gradient(135deg, #000, #333, #000);
+    border: 2px solid white;
+    border-radius: 25px;
+    padding: 4rem 3rem;
+    text-align: center;
+    margin: 2rem auto;
+    max-width: 1000px;
+    box-shadow: 0 0 50px rgba(255, 255, 255, 0.3);
+    position: relative;
+    overflow: hidden;
+    animation: bannerPulse 4s ease-in-out infinite;
+}
+
+@keyframes bannerPulse {
+    0%, 100% { box-shadow: 0 0 50px rgba(255, 255, 255, 0.3); }
+    50% { box-shadow: 0 0 80px rgba(255, 255, 255, 0.6); }
+}
+
+.event-banner::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.event-title {
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(45deg, #ffd700, #ff6b6b, #ffd700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: titlePulse 2s ease-in-out infinite;
+}
+
+@keyframes titlePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.event-subtitle {
+    font-size: 1.4rem;
+    opacity: 0.9;
+    position: relative;
+    z-index: 1;
+    color: white;
+}
+
+.main-content {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.event-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+}
+
+.event-card {
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #333;
+    border-radius: 25px;
+    padding: 3rem;
+    backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+    animation: cardSlide 0.8s ease-out;
+    transition: all 0.3s ease;
+}
+
+@keyframes cardSlide {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.event-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.event-card:hover::before {
+    left: 100%;
+}
+
+.event-card:hover {
+    border-color: white;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+    transform: translateY(-5px);
+}
+
+.event-card h2 {
+    margin-bottom: 2rem;
+    color: white;
+    font-size: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.event-character {
+    text-align: center;
+}
+
+.character-image {
+    width: 250px;
+    height: 250px;
+    border-radius: 25px;
+    margin: 0 auto 2rem;
+    border: 4px solid white;
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.5);
+    animation: characterGlow 2s ease-in-out infinite alternate;
+}
+
+@keyframes characterGlow {
+    from { box-shadow: 0 0 40px rgba(255, 255, 255, 0.5); }
+    to { box-shadow: 0 0 60px rgba(255, 255, 255, 0.8); }
+}
+
+.character-name {
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+    margin-bottom: 1.5rem;
+}
+
+.character-description {
+    color: #ccc;
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+    font-size: 1.1rem;
+}
+
+.claim-btn {
+    width: 100%;
+    padding: 2rem;
+    background: white;
+    color: black;
+    border: none;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.claim-btn:hover {
+    background: #f0f0f0;
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(255, 255, 255, 0.4);
+}
+
+.claim-btn:disabled {
+    background: rgba(255, 255, 255, 0.2);
+    color: #666;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.claim-btn.claimed {
+    background: rgba(0, 255, 0, 0.2);
+    color: #00ff00;
+    border: 2px solid #00ff00;
+}
+
+.spin-section {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #333;
+    border-radius: 20px;
+    padding: 2.5rem;
+    margin-top: 2rem;
+}
+
+.spin-wheel {
+    width: 350px;
+    height: 350px;
+    border-radius: 50%;
+    background: conic-gradient(
+        #ff6b6b 0deg 72deg,
+        #4ecdc4 72deg 144deg,
+        #45b7d1 144deg 216deg,
+        #96ceb4 216deg 288deg,
+        #feca57 288deg 360deg
+    );
+    margin: 0 auto 2.5rem;
+    position: relative;
+    border: 8px solid white;
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+    animation: spin 4s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.spin-wheel::before {
+    content: '🎯';
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2.5rem;
+    z-index: 2;
+}
+
+.spin-wheel::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    background: white;
+    border-radius: 50%;
+    border: 4px solid black;
+}
+
+.spin-info {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.spin-info h3 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.spin-character {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid #333;
+    padding: 1.5rem;
+    border-radius: 20px;
+    margin-bottom: 2.5rem;
+    animation: spinCharacterGlow 3s ease-in-out infinite;
+}
+
+@keyframes spinCharacterGlow {
+    0%, 100% { border-color: #333; }
+    50% { border-color: white; }
+}
+
+.spin-character-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 15px;
+    border: 3px solid white;
+    animation: characterFloat 3s ease-in-out infinite;
+}
+
+@keyframes characterFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-8px); }
+}
+
+.spin-character-info {
+    flex: 1;
+}
+
+.spin-character-name {
+    font-weight: bold;
+    color: white;
+    margin-bottom: 0.8rem;
+    font-size: 1.3rem;
+}
+
+.spin-costs {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+}
+
+.spin-cost {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid #333;
+    padding: 1rem;
+    border-radius: 15px;
+    text-align: center;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.spin-cost.current {
+    background: white;
+    color: black;
+    border-color: white;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+    animation: currentCostPulse 2s ease-in-out infinite;
+}
+
+@keyframes currentCostPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.spin-btn {
+    width: 100%;
+    padding: 2rem;
+    background: white;
+    color: black;
+    border: none;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.spin-btn:hover {
+    background: #f0f0f0;
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(255, 255, 255, 0.4);
+}
+
+.spin-btn:disabled {
+    background: rgba(255, 255, 255, 0.2);
+    color: #666;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.no-event {
+    text-align: center;
+    color: #666;
+    padding: 4rem 2rem;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.loading {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #666;
+    animation: loadingPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes loadingPulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+.success-message {
+    background: rgba(0, 255, 0, 0.1);
+    color: #00ff00;
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    border: 2px solid rgba(0, 255, 0, 0.3);
+    text-align: center;
+    animation: messageSlide 0.5s ease-out;
+}
+
+.error-message {
+    background: rgba(255, 0, 0, 0.1);
+    color: #ff6666;
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    border: 2px solid rgba(255, 0, 0, 0.3);
+    text-align: center;
+    animation: messageSlide 0.5s ease-out;
+}
+
+@keyframes messageSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 1024px) {
+    .event-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .main-content {
+        padding: 1rem;
+    }
+    
+    .header {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+    
+    .nav {
+        justify-content: center;
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .event-title {
+        font-size: 2.5rem;
+    }
+    
+    .event-banner {
+        padding: 3rem 2rem;
+        margin: 1rem;
+    }
+    
+    .event-card {
+        padding: 2rem;
+    }
+    
+    .spin-wheel {
+        width: 280px;
+        height: 280px;
+    }
+    
+    .spin-costs {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .character-image {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .nav-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .event-title {
+        font-size: 2rem;
+    }
+    
+    .event-subtitle {
+        font-size: 1.1rem;
+    }
+    
+    .event-banner {
+        padding: 2rem 1.5rem;
+    }
+    
+    .event-card {
+        padding: 1.5rem;
+    }
+    
+    .character-image {
+        width: 180px;
+        height: 180px;
+    }
+    
+    .spin-wheel {
+        width: 250px;
+        height: 250px;
+    }
+    
+    .spin-costs {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .spin-character {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="background-grid"></div>
+    <div class="header">
+        <h1>🎉 Special Event</h1>
+        <nav class="nav">
+            <a href="lobby.html" class="nav-btn">🏠 Lobby</a>
+            <a href="profile.html" class="nav-btn">👤 Profile</a>
+            <a href="vault.html" class="nav-btn">🏛️ Vault</a>
+            <a href="shop.html" class="nav-btn">🛒 Shop</a>
+        </nav>
+    </div>
+
+    <div class="event-banner">
+        <div class="event-title">🎉 LIMITED TIME EVENT 🎉</div>
+        <div class="event-subtitle">Claim exclusive characters and try your luck at the spin wheel!</div>
+    </div>
+
+    <div class="main-content">
+        <div id="eventMessage"></div>
+        
+        <div class="event-content">
+            <!-- Event Character Claim -->
+            <div class="event-card">
+                <h2>🎁 Free Event Character</h2>
+                <div id="eventCharacterSection">
+                    <div class="loading">Loading event character...</div>
+                </div>
+            </div>
+
+            <!-- Spin Wheel -->
+            <div class="event-card">
+                <h2>🎰 Character Spin Wheel</h2>
+                <div class="spin-section">
+                    <div class="spin-wheel"></div>
+                    <div class="spin-info">
+                        <h3>🎯 Featured Character</h3>
+                        <div id="spinCharacterSection">
+                            <div class="loading">Loading spin character...</div>
+                        </div>
+                    </div>
+                    <div id="spinCostsSection">
+                        <div class="loading">Loading spin costs...</div>
+                    </div>
+                    <button class="spin-btn" id="spinBtn" onclick="spinForCharacter()">
+                        🎰 SPIN NOW!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add at the beginning of the script section
+        // Sound effects
+        const playSound = (type) => {
+            const audio = new Audio();
+            switch(type) {
+                case 'click':
+                    audio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTuR2O/Eeyw';
+                    break;
+                case 'success':
+                    audio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTuR2O/Eeyw';
+                    break;
+                case 'spin':
+                    audio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTuR2O/Eeyw';
+                    break;
+            }
+            audio.volume = 0.3;
+            audio.play().catch(() => {});
+        };
+
+        // Add click sound to all buttons
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON' || e.target.classList.contains('nav-btn')) {
+                playSound('click');
+            }
+        });
+        const authToken = localStorage.getItem('authToken');
+        
+        if (!authToken) {
+            window.location.href = 'login.html';
+        }
+
+        let userProfile = null;
+        let spinProgress = 0;
+        const SPIN_COSTS = [100, 200, 300, 400, 500];
+
+        function showMessage(message, isError = false) {
+            const messageDiv = document.getElementById('eventMessage');
+            messageDiv.innerHTML = `<div class="${isError ? 'error-message' : 'success-message'}">${message}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 5000);
+        }
+
+        async function loadUserProfile() {
+            try {
+                const response = await fetch('/profile', {
+                    headers: { 'Authorization': authToken }
+                });
+                
+                if (response.ok) {
+                    userProfile = await response.json();
+                    updateSpinButton();
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        async function loadEventCharacter() {
+            try {
+                const response = await fetch('/event', {
+                    headers: { 'Authorization': authToken }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const section = document.getElementById('eventCharacterSection');
+                    
+                    if (data.character) {
+                        section.innerHTML = `
+                            <div class="event-character">
+                                <img src="https://reaperxxxx-animepfp.hf.space/img?q=${data.character.id}" 
+                                     class="character-image" alt="${data.character.name}">
+                                <div class="character-name">${data.character.name}</div>
+                                <div class="character-description">
+                                    A legendary character available for a limited time! 
+                                    Claim this powerful ally to strengthen your collection.
+                                </div>
+                                <button class="claim-btn ${data.claimed ? 'claimed' : ''}" 
+                                        ${data.claimed ? 'disabled' : ''} 
+                                        onclick="claimEventCharacter()">
+                                    ${data.claimed ? '✅ ALREADY CLAIMED' : '🎁 CLAIM FREE CHARACTER'}
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        section.innerHTML = `
+                            <div class="no-event">
+                                No active event character<br>
+                                <small>Check back later for new events!</small>
+                            </div>
+                        `;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading event character:', error);
+                document.getElementById('eventCharacterSection').innerHTML = `
+                    <div class="no-event">Error loading event character</div>
+                `;
+            }
+        }
+
+        async function loadSpinCharacter() {
+            // Since we don't have a direct endpoint for the current spin character,
+            // we'll simulate it with a default character
+            const section = document.getElementById('spinCharacterSection');
+            section.innerHTML = `
+                <div class="spin-character">
+                    <img src="https://reaperxxxx-animepfp.hf.space/img?q=22" 
+                         class="spin-character-image" alt="Spin Character">
+                    <div class="spin-character-info">
+                        <div class="spin-character-name">Featured Spin Character</div>
+                        <div>Try your luck to win this exclusive character!</div>
+                    </div>
+                </div>
+            `;
+            
+            updateSpinCosts();
+        }
+
+        function updateSpinCosts() {
+            const section = document.getElementById('spinCostsSection');
+            section.innerHTML = `
+                <h4 style="text-align: center; margin-bottom: 1rem;">Spin Costs</h4>
+                <div class="spin-costs">
+                    ${SPIN_COSTS.map((cost, index) => `
+                        <div class="spin-cost ${index === spinProgress ? 'current' : ''}">
+                            Spin ${index + 1}<br>
+                            💰 ${cost}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function updateSpinButton() {
+            const spinBtn = document.getElementById('spinBtn');
+            
+            if (!userProfile) {
+                spinBtn.disabled = true;
+                spinBtn.textContent = 'Loading...';
+                return;
+            }
+            
+            if (spinProgress >= SPIN_COSTS.length) {
+                spinBtn.disabled = true;
+                spinBtn.textContent = '🎯 MAX SPINS REACHED';
+                return;
+            }
+            
+            const currentCost = SPIN_COSTS[spinProgress];
+            const canAfford = userProfile.coins >= currentCost;
+            
+            spinBtn.disabled = !canAfford;
+            spinBtn.textContent = canAfford ? 
+                `🎰 SPIN FOR ${currentCost} COINS` : 
+                `💰 NEED ${currentCost} COINS`;
+        }
+
+        async function claimEventCharacter() {
+            try {
+                const response = await fetch('/claim-event-character', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': authToken
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage(data.message);
+                    loadEventCharacter();
+                    loadUserProfile();
+                } else {
+                    showMessage(data.error, true);
+                }
+            } catch (error) {
+                showMessage('Error claiming character', true);
+            }
+        }
+
+        async function spinForCharacter() {
+            if (!userProfile || spinProgress >= SPIN_COSTS.length) return;
+            
+            const currentCost = SPIN_COSTS[spinProgress];
+            if (userProfile.coins < currentCost) {
+                showMessage('Insufficient coins!', true);
+                return;
+            }
+            
+            const spinBtn = document.getElementById('spinBtn');
+            spinBtn.disabled = true;
+            spinBtn.textContent = '🎰 SPINNING...';
+            
+            // In the spinForCharacter function, add sound effect when spinning starts
+            playSound('spin');
+
+            try {
+                const response = await fetch('/spin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': authToken
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Animate the spin wheel
+                    const wheel = document.querySelector('.spin-wheel');
+                    wheel.style.animation = 'spin 2s ease-out';
+                    
+                    setTimeout(() => {
+                        showMessage(data.message);
+                        wheel.style.animation = 'spin 4s linear infinite';
+                        
+                        // Update user profile and spin progress
+                        loadUserProfile();
+                        
+                        // Update spin progress based on message
+                        if (data.message.includes('Congratulations')) {
+                            spinProgress = 0; // Reset on win
+                        } else {
+                            spinProgress++;
+                        }
+                        
+                        updateSpinCosts();
+                        updateSpinButton();
+                    }, 2000);
+                } else {
+                    showMessage(data.error, true);
+                    updateSpinButton();
+                }
+            } catch (error) {
+                showMessage('Error spinning', true);
+                updateSpinButton();
+            }
+        }
+
+        // Load all data on page load
+        loadUserProfile();
+        loadEventCharacter();
+        loadSpinCharacter();
+        
+        // Refresh data every 30 seconds
+        setInterval(() => {
+            loadUserProfile();
+            loadEventCharacter();
+        }, 30000);
+    </script>
+</body>
+</html>
