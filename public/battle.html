@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Battle - Battle Arena</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c1810 0%, #8b0000 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .main-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .battle-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 2rem;
+        }
+
+        .battle-arena {
+            display: grid;
+            grid-template-columns: 1fr 200px 1fr;
+            gap: 2rem;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .fighter {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border: 2px solid transparent;
+        }
+
+        .fighter.active {
+            border-color: #ffd700;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .fighter-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 15px;
+            margin: 0 auto 1rem;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .fighter-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .fighter-character {
+            color: #ffd700;
+            margin-bottom: 1rem;
+        }
+
+        .hp-bar {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            height: 20px;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+        }
+
+        .hp-fill {
+            background: linear-gradient(90deg, #ff4757, #ff6b6b);
+            height: 100%;
+            transition: width 0.5s ease;
+            border-radius: 10px;
+        }
+
+        .hp-text {
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .vs-section {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .battle-info {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .battle-status {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .round-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .skills-section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .skill-btn {
+            padding: 1rem;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .skill-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .skill-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .battle-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .action-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+
+        .accept-btn {
+            background: linear-gradient(45deg, #10ac84, #00d2d3);
+        }
+
+        .leave-btn {
+            background: linear-gradient(45deg, #ff4757, #c44569);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .battle-list {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .battle-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .battle-details {
+            flex: 1;
+        }
+
+        .battle-opponent {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .battle-meta {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .battle-status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background: linear-gradient(45deg, #ffa726, #ff9800);
+        }
+
+        .status-active {
+            background: linear-gradient(45deg, #10ac84, #00d2d3);
+        }
+
+        .status-your-turn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 107, 107, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .no-battles {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 2rem;
+        }
+
+        .battle-log {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 1rem;
+        }
+
+        .log-entry {
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid #ffd700;
+            padding-left: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .battle-arena {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .vs-section {
+                order: -1;
+            }
+            
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .battle-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⚔️ Battle Arena</h1>
+        <nav class="nav">
+            <a href="lobby.html" class="nav-btn">🏠 Lobby</a>
+            <a href="rooms.html" class="nav-btn">🏠 Rooms</a>
+            <a href="profile.html" class="nav-btn">👤 Profile</a>
+            <a href="vault.html" class="nav-btn">🏛️ Vault</a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div id="activeBattleSection" style="display: none;">
+            <div class="battle-container">
+                <div class="battle-arena" id="battleArena">
+                    <!-- Battle arena will be populated here -->
+                </div>
+                
+                <div class="battle-info" id="battleInfo">
+                    <!-- Battle info will be populated here -->
+                </div>
+                
+                <div class="skills-section" id="skillsSection" style="display: none;">
+                    <h3>🎯 Choose Your Attack</h3>
+                    <div class="skills-grid" id="skillsGrid">
+                        <!-- Skills will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="battle-actions" id="battleActions">
+                    <!-- Battle actions will be populated here -->
+                </div>
+                
+                <div class="battle-log" id="battleLog">
+                    <!-- Battle log will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="battle-list">
+            <h2>⚔️ Your Battles</h2>
+            <div id="battlesList">
+                <div class="loading">Loading battles...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const authToken = localStorage.getItem('authToken');
+        const userId = localStorage.getItem('userId');
+        
+        if (!authToken) {
+            window.location.href = 'login.html';
+        }
+
+        let currentBattle = null;
+        let battleLog = [];
+
+        async function loadActiveBattles() {
+            try {
+                const response = await fetch('/battle/active', {
+                    headers: { 'Authorization': authToken }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const battlesList = document.getElementById('battlesList');
+                    
+                    if (data.battles.length === 0) {
+                        battlesList.innerHTML = `
+                            <div class="no-battles">
+                                No active battles<br>
+                                <a href="lobby.html" style="color: #ffd700;">Go to lobby to start a battle</a>
+                            </div>
+                        `;
+                        document.getElementById('activeBattleSection').style.display = 'none';
+                    } else {
+                        battlesList.innerHTML = data.battles.map(battle => {
+                            let statusClass = 'status-pending';
+                            let statusText = 'Pending';
+                            
+                            if (battle.accepted) {
+                                if (battle.yourTurn) {
+                                    statusClass = 'status-your-turn';
+                                    statusText = 'Your Turn!';
+                                } else {
+                                    statusClass = 'status-active';
+                                    statusText = `${battle.currentTurn}'s Turn`;
+                                }
+                            }
+                            
+                            return `
+                                <div class="battle-item" onclick="selectBattle('${battle.battleId}')">
+                                    <div class="battle-details">
+                                        <div class="battle-opponent">vs ${battle.opponent}</div>
+                                        <div class="battle-meta">
+                                            💰 ${battle.amount} coins • Round ${battle.currentRound}
+                                        </div>
+                                    </div>
+                                    <div class="battle-status-badge ${statusClass}">
+                                        ${statusText}
+                                    </div>
+                                </div>
+                            `;
+                        }).join('');
+                        
+                        // Auto-select first battle if none selected
+                        if (!currentBattle && data.battles.length > 0) {
+                            selectBattle(data.battles[0].battleId);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading battles:', error);
+            }
+        }
+
+        function selectBattle(battleId) {
+            currentBattle = battleId;
+            document.getElementById('activeBattleSection').style.display = 'block';
+            loadBattleDetails(battleId);
+        }
+
+        async function loadBattleDetails(battleId) {
+            // This is a simplified version - in a real app you'd have a specific endpoint
+            // For now, we'll use the active battles data
+            try {
+                const response = await fetch('/battle/active', {
+                    headers: { 'Authorization': authToken }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const battle = data.battles.find(b => b.battleId === battleId);
+                    
+                    if (battle) {
+                        displayBattleArena(battle);
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading battle details:', error);
+            }
+        }
+
+        function displayBattleArena(battle) {
+            const battleArena = document.getElementById('battleArena');
+            const battleInfo = document.getElementById('battleInfo');
+            const skillsSection = document.getElementById('skillsSection');
+            const battleActions = document.getElementById('battleActions');
+            
+            // Display fighters
+            battleArena.innerHTML = `
+                <div class="fighter ${battle.yourTurn ? 'active' : ''}">
+                    <img src="https://reaperxxxx-animepfp.hf.space/img?q=${Math.floor(Math.random() * 100) + 1}" 
+                         class="fighter-image" alt="You">
+                    <div class="fighter-name">You</div>
+                    <div class="fighter-character">Your Character</div>
+                    <div class="hp-bar">
+                        <div class="hp-fill" style="width: 75%"></div>
+                    </div>
+                    <div class="hp-text">750/1000 HP</div>
+                </div>
+                
+                <div class="vs-section">
+                    VS<br>
+                    <small style="font-size: 0.5em;">Round ${battle.currentRound}</small>
+                </div>
+                
+                <div class="fighter ${!battle.yourTurn ? 'active' : ''}">
+                    <img src="https://reaperxxxx-animepfp.hf.space/img?q=${Math.floor(Math.random() * 100) + 1}" 
+                         class="fighter-image" alt="${battle.opponent}">
+                    <div class="fighter-name">${battle.opponent}</div>
+                    <div class="fighter-character">Enemy Character</div>
+                    <div class="hp-bar">
+                        <div class="hp-fill" style="width: 60%"></div>
+                    </div>
+                    <div class="hp-text">600/1000 HP</div>
+                </div>
+            `;
+            
+            // Display battle info
+            battleInfo.innerHTML = `
+                <div class="battle-status">
+                    ${battle.yourTurn ? "🎯 It's your turn!" : `⏳ Waiting for ${battle.currentTurn}...`}
+                </div>
+                <div class="round-info">
+                    <span>💰 Prize: ${battle.amount * 2} coins</span>
+                    <span>🏆 Round ${battle.currentRound}/3</span>
+                </div>
+            `;
+            
+            // Show skills if it's player's turn
+            if (battle.yourTurn && battle.skills && battle.skills.length > 0) {
+                skillsSection.style.display = 'block';
+                const skillsGrid = document.getElementById('skillsGrid');
+                skillsGrid.innerHTML = battle.skills.map(skill => `
+                    <button class="skill-btn" onclick="useSkill('${skill.letter}', '${skill.name}')">
+                        ${skill.letter}: ${skill.name}
+                    </button>
+                `).join('');
+            } else {
+                skillsSection.style.display = 'none';
+            }
+            
+            // Show battle actions
+            if (!battle.accepted) {
+                battleActions.innerHTML = `
+                    <button class="action-btn accept-btn" onclick="acceptBattle('${battle.battleId}')">
+                        ✅ Accept Battle
+                    </button>
+                    <button class="action-btn leave-btn" onclick="leaveBattle('${battle.battleId}')">
+                        🚪 Leave Battle
+                    </button>
+                `;
+            } else {
+                battleActions.innerHTML = `
+                    <button class="action-btn leave-btn" onclick="forfeitBattle('${battle.battleId}')">
+                        🏳️ Forfeit Battle
+                    </button>
+                `;
+            }
+        }
+
+        async function acceptBattle(battleId) {
+            try {
+                const response = await fetch('/battle/accept', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': authToken
+                    },
+                    body: JSON.stringify({ battleId })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    addToBattleLog(data.message);
+                    loadActiveBattles();
+                } else {
+                    alert(data.error);
+                }
+            } catch (error) {
+                alert('Error accepting battle');
+            }
+        }
+
+        async function leaveBattle(battleId) {
+            try {
+                const response = await fetch('/battle/leave', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': authToken
+                    },
+                    body: JSON.stringify({ battleId })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    alert(data.message);
+                    loadActiveBattles();
+                } else {
+                    alert(data.error);
+                }
+            } catch (error) {
+                alert('Error leaving battle');
+            }
+        }
+
+        async function useSkill(skillLetter, skillName) {
+            if (!currentBattle) return;
+            
+            try {
+                const response = await fetch('/battle/attack', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': authToken
+                    },
+                    body: JSON.stringify({ 
+                        battleId: currentBattle, 
+                        skillLetter: skillLetter 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    addToBattleLog(`You used ${skillName}! ${data.message}`);
+                    
+                    // Check if battle ended
+                    if (data.winner) {
+                        addToBattleLog(`🏆 ${data.winner} wins the battle!`);
+                        setTimeout(() => {
+                            loadActiveBattles();
+                        }, 2000);
+                    } else {
+                        // Refresh battle state
+                        setTimeout(() => {
+                            loadActiveBattles();
+                        }, 1000);
+                    }
+                } else {
+                    alert(data.error);
+                }
+            } catch (error) {
+                alert('Error using skill');
+            }
+        }
+
+        function addToBattleLog(message) {
+            battleLog.push({
+                message,
+                timestamp: new Date().toLocaleTimeString()
+            });
+            
+            const battleLogDiv = document.getElementById('battleLog');
+            battleLogDiv.innerHTML = battleLog.map(entry => `
+                <div class="log-entry">
+                    <small style="opacity: 0.7;">[${entry.timestamp}]</small><br>
+                    ${entry.message}
+                </div>
+            `).join('');
+            
+            // Scroll to bottom
+            battleLogDiv.scrollTop = battleLogDiv.scrollHeight;
+        }
+
+        // Load battles on page load
+        loadActiveBattles();
+        
+        // Refresh battles every 5 seconds
+        setInterval(loadActiveBattles, 5000);
+    </script>
+</body>
+</html>
