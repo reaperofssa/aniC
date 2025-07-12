@@ -1,0 +1,407 @@
+{
+  "characters": [
+    {
+      "id": 1,
+      "name": "Goku (Ultra Instinct)",
+      "power_rating": 95,
+      "hp": 9500,
+      "skills": [
+        { "name": "Ultra Instinct Dodge", "power_rating": 98 },
+        { "name": "Kamehameha Wave", "power_rating": 96 },
+        { "name": "Instant Transmission", "power_rating": 95 },
+        { "name": "Spirit Bomb", "power_rating": 97 },
+        { "name": "Godly Counter", "power_rating": 99 }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Saitama",
+      "power_rating": 94,
+      "hp": 9400,
+      "skills": [
+        { "name": "Serious Punch", "power_rating": 99 },
+        { "name": "Consecutive Normal Punches", "power_rating": 95 },
+        { "name": "Jumping from Moon", "power_rating": 93 },
+        { "name": "Serious Side Hops", "power_rating": 92 },
+        { "name": "Serious Table Flip", "power_rating": 94 }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Anos Voldigoad",
+      "power_rating": 93,
+      "hp": 9300,
+      "skills": [
+        { "name": "Venuzdonoa Slash", "power_rating": 97 },
+        { "name": "Chaos Destruction", "power_rating": 96 },
+        { "name": "Time Reversal", "power_rating": 95 },
+        { "name": "Magic Eyes of Destruction", "power_rating": 94 },
+        { "name": "Source Manipulation", "power_rating": 98 }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Yogiri Takatou",
+      "power_rating": 92,
+      "hp": 9200,
+      "skills": [
+        { "name": "Instant Death", "power_rating": 184 },
+        { "name": "Fate Severance", "power_rating": 97 },
+        { "name": "Conceptual Immunity", "power_rating": 95 },
+        { "name": "Absolute Existence", "power_rating": 96 },
+        { "name": "Omnipresent Awareness", "power_rating": 94 }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Veldora Tempest",
+      "power_rating": 90,
+      "hp": 9000,
+      "skills": [
+        { "name": "Storm Breath", "power_rating": 93 },
+        { "name": "Dragon Haki", "power_rating": 92 },
+        { "name": "Mega Tempest", "power_rating": 94 },
+        { "name": "Ultimate Skill: Storm King", "power_rating": 95 },
+        { "name": "Dimensional Leap", "power_rating": 91 }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Naruto (Baryon Mode)",
+      "power_rating": 90,
+      "hp": 9000,
+      "skills": [
+        { "name": "Baryon Rasengan", "power_rating": 96 },
+        { "name": "Kurama Avatar", "power_rating": 94 },
+        { "name": "Truth-Seeking Orbs", "power_rating": 93 },
+        { "name": "Six Paths Sage Mode", "power_rating": 95 },
+        { "name": "Tailed Beast Bomb", "power_rating": 92 }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Madara Uchiha (Six Paths)",
+      "power_rating": 89,
+      "hp": 8900,
+      "skills": [
+        { "name": "Infinite Tsukuyomi", "power_rating": 95 },
+        { "name": "Perfect Susanoo", "power_rating": 94 },
+        { "name": "Meteor Summoning", "power_rating": 92 },
+        { "name": "Limbo Clone", "power_rating": 93 },
+        { "name": "Wood Dragon Technique", "power_rating": 91 }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Asta (Devil Union)",
+      "power_rating": 88,
+      "hp": 8800,
+      "skills": [
+        { "name": "Devil Slash", "power_rating": 92 },
+        { "name": "Black Hurricane", "power_rating": 91 },
+        { "name": "Anti-Magic Zone", "power_rating": 93 },
+        { "name": "Devil Flight", "power_rating": 90 },
+        { "name": "Union Sword Strike", "power_rating": 94 }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Sukuna (Full Power)",
+      "power_rating": 87,
+      "hp": 8700,
+      "skills": [
+        { "name": "Malevolent Shrine", "power_rating": 95 },
+        { "name": "Dismantle & Cleave", "power_rating": 94 },
+        { "name": "Fire Arrow", "power_rating": 93 },
+        { "name": "Domain Expansion", "power_rating": 96 },
+        { "name": "Reverse Cursed Technique", "power_rating": 92 }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Sung Jin-Woo (Shadow Monarch)",
+      "power_rating": 86,
+      "hp": 8600,
+      "skills": [
+        { "name": "Shadow Army Summon", "power_rating": 92 },
+        { "name": "Ruler's Authority", "power_rating": 93 },
+        { "name": "Dimensional Slash", "power_rating": 91 },
+        { "name": "Shadow Exchange", "power_rating": 90 },
+        { "name": "Monarch's Presence", "power_rating": 94 }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Gojo Satoru",
+      "power_rating": 89,
+      "hp": 8900,
+      "skills": [
+        { "name": "Unlimited Void", "power_rating": 96 },
+        { "name": "Hollow Purple", "power_rating": 95 },
+        { "name": "Infinity Barrier", "power_rating": 97 },
+        { "name": "Reverse Cursed Technique", "power_rating": 94 },
+        { "name": "Six Eyes Perception", "power_rating": 98 }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Sasuke (Rinnegan)",
+      "power_rating": 84,
+      "hp": 8400,
+      "skills": [
+        { "name": "Amaterasu", "power_rating": 90 },
+        { "name": "Susanoo Armor", "power_rating": 91 },
+        { "name": "Chidori Spear", "power_rating": 89 },
+        { "name": "Space-Time Swap", "power_rating": 92 },
+        { "name": "Indra's Arrow", "power_rating": 93 }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Monkey D. Luffy (Gear 5)",
+      "power_rating": 92,
+      "hp": 9200,
+      "skills": [
+        { "name": "Gomu Gomu no Bajrang Gun", "power_rating": 97 },
+        { "name": "Reality Warping", "power_rating": 96 },
+        { "name": "Giant Form", "power_rating": 95 },
+        { "name": "Haki Overload", "power_rating": 94 },
+        { "name": "Toon Force Immunity", "power_rating": 98 }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Obito Uchiha (Ten Tails)",
+      "power_rating": 86,
+      "hp": 8600,
+      "skills": [
+        { "name": "Kamui Phasing", "power_rating": 92 },
+        { "name": "Ten Tails Bomb", "power_rating": 93 },
+        { "name": "Truth-Seeking Staff", "power_rating": 91 },
+        { "name": "Six Paths Chakra", "power_rating": 94 },
+        { "name": "Izanagi", "power_rating": 90 }
+      ]
+    },
+    {
+      "id": 15,
+      "name": "Yuno (Spirit of Zephyr + Star Magic)",
+      "power_rating": 83,
+      "hp": 8300,
+      "skills": [
+        { "name": "Spirit Storm", "power_rating": 88 },
+        { "name": "Star Magic Barrage", "power_rating": 89 },
+        { "name": "Zephyr Dash", "power_rating": 87 },
+        { "name": "Celestial Shield", "power_rating": 86 },
+        { "name": "Fate Manipulation", "power_rating": 90 }
+      ]
+    },
+    {
+      "id": 16,
+      "name": "Roronoa Zoro",
+      "power_rating": 85,
+      "hp": 8500,
+      "skills": [
+        { "name": "Three Sword Style: Oni Giri", "power_rating": 89 },
+        { "name": "Ashura: Nine Sword Style", "power_rating": 91 },
+        { "name": "Dragon Twister", "power_rating": 88 },
+        { "name": "Haki Infusion", "power_rating": 90 },
+        { "name": "Great Dragon Shock", "power_rating": 92 }
+      ]
+    },
+    {
+      "id": 17,
+      "name": "Itachi Uchiha",
+      "power_rating": 86,
+      "hp": 8600,
+      "skills": [
+        { "name": "Tsukuyomi", "power_rating": 93 },
+        { "name": "Amaterasu", "power_rating": 91 },
+        { "name": "Susanoo: Yata Mirror", "power_rating": 92 },
+        { "name": "Izanami", "power_rating": 94 },
+        { "name": "Shuriken Shadow Clone", "power_rating": 90 }
+      ]
+    },
+    {
+      "id": 18,
+      "name": "Chainsaw Man (Denji)",
+      "power_rating": 80,
+      "hp": 8000,
+      "skills": [
+        { "name": "Chainsaw Ripper", "power_rating": 84 },
+        { "name": "Devil Regeneration", "power_rating": 83 },
+        { "name": "Blood Chains", "power_rating": 85 },
+        { "name": "Infinite Hunger", "power_rating": 86 },
+        { "name": "Hybrid Transformation", "power_rating": 87 }
+      ]
+    },
+    {
+      "id": 19,
+      "name": "Genos",
+      "power_rating": 78,
+      "hp": 7800,
+      "skills": [
+        { "name": "Incinerate Beam", "power_rating": 82 },
+        { "name": "Rocket Punch", "power_rating": 81 },
+        { "name": "Overdrive Mode", "power_rating": 83 },
+        { "name": "Self-Destruct Protocol", "power_rating": 85 },
+        { "name": "Plasma Cannon", "power_rating": 84 }
+      ]
+    },
+    {
+      "id": 20,
+      "name": "Vinsmoke Sanji",
+      "power_rating": 80,
+      "hp": 8000,
+      "skills": [
+        { "name": "Diable Jambe: Flambage Shot", "power_rating": 84 },
+        { "name": "Sky Walk", "power_rating": 83 },
+        { "name": "Hells Memories", "power_rating": 85 },
+        { "name": "Observation Haki", "power_rating": 86 },
+        { "name": "Raid Suit Boost", "power_rating": 87 }
+      ]
+    },
+    {
+      "id": 21,
+      "name": "Gintoki Sakata",
+      "power_rating": 74,
+      "hp": 7400,
+      "skills": [
+        { "name": "Bokuto Slash", "power_rating": 78 },
+        { "name": "Silver Soul Spirit", "power_rating": 77 },
+        { "name": "Breakthrough Strike", "power_rating": 79 },
+        { "name": "Comedic Timing", "power_rating": 76 },
+        { "name": "Dragon's Roar", "power_rating": 80 }
+      ]
+    },
+    {
+      "id": 22,
+      "name": "Light Yagami",
+      "power_rating": 69,
+      "hp": 6900,
+      "skills": [
+        { "name": "Death Note Writing", "power_rating": 95 },
+        { "name": "Master Strategist", "power_rating": 85 },
+        { "name": "Psychological Warfare", "power_rating": 82 },
+        { "name": "Perfect Deception", "power_rating": 88 },
+        { "name": "Shinigami Eyes", "power_rating": 90 }
+      ]
+    },
+    {
+      "id": 23,
+      "name": "Killua Zoldyck (Godspeed)",
+      "power_rating": 73,
+      "hp": 7300,
+      "skills": [
+        { "name": "Godspeed: Whirlwind", "power_rating": 80 },
+        { "name": "Lightning Palm", "power_rating": 79 },
+        { "name": "Assassin's Stealth", "power_rating": 78 },
+        { "name": "Kanmuru Speed", "power_rating": 81 },
+        { "name": "Nen Lightning", "power_rating": 82 }
+      ]
+    },
+    {
+      "id": 24,
+      "name": "Yumeko Jabami",
+      "power_rating": 62,
+      "hp": 6200,
+      "skills": [
+        { "name": "Probability Manipulation", "power_rating": 85 },
+        { "name": "Perfect Bluff", "power_rating": 80 },
+        { "name": "Gambler's High", "power_rating": 78 },
+        { "name": "Mind Reading", "power_rating": 82 },
+        { "name": "Risk Calculation", "power_rating": 84 }
+      ]
+    },
+    {
+      "id": 25,
+      "name": "Shadow (Atomic)",
+      "power_rating": 91,
+      "hp": 9100,
+      "skills": [
+        { "name": "Atomic Slash", "power_rating": 96 },
+        { "name": "Shadow Step", "power_rating": 95 },
+        { "name": "Limitless Speed", "power_rating": 94 },
+        { "name": "Sword of Destruction", "power_rating": 97 },
+        { "name": "Ultimate Focus", "power_rating": 98 }
+      ]
+    },
+    {
+      "id": 26,
+      "name": "Kakashi Hatake",
+      "power_rating": 82,
+      "hp": 8200,
+      "skills": [
+        { "name": "Kamui Sniping", "power_rating": 88 },
+        { "name": "Chidori", "power_rating": 87 },
+        { "name": "Sharingan Prediction", "power_rating": 86 },
+        { "name": "Purple Lightning", "power_rating": 89 },
+        { "name": "Thousand Years of Death", "power_rating": 85 }
+      ]
+    },
+    {
+      "id": 27,
+      "name": "Usopp",
+      "power_rating": 69,
+      "hp": 6900,
+      "skills": [
+        { "name": "Pop Greens Trap", "power_rating": 75 },
+        { "name": "Sniper King Shot", "power_rating": 78 },
+        { "name": "God Usopp Hammer", "power_rating": 74 },
+        { "name": "Kabuto Sling", "power_rating": 77 },
+        { "name": "Liar's Luck", "power_rating": 80 }
+      ]
+    },
+    {
+      "id": 28,
+      "name": "Boruto (Karma + Jougan)",
+      "power_rating": 88,
+      "hp": 8800,
+      "skills": [
+        { "name": "Karma Absorption", "power_rating": 92 },
+        { "name": "Jougan Vision", "power_rating": 93 },
+        { "name": "Vanishing Rasengan", "power_rating": 91 },
+        { "name": "Space-Time Hop", "power_rating": 94 },
+        { "name": "Momoshiki's Power", "power_rating": 95 }
+      ]
+    },
+    {
+      "id": 29,
+      "name": "Mikey Sano (Tokyo Revengers)",
+      "power_rating": 77,
+      "hp": 7700,
+      "skills": [
+        { "name": "Dark Impulse", "power_rating": 83 },
+        { "name": "Kick of Destruction", "power_rating": 82 },
+        { "name": "Leader's Charisma", "power_rating": 81 },
+        { "name": "Speed Blitz", "power_rating": 84 },
+        { "name": "Unbreakable Will", "power_rating": 85 }
+      ]
+    },
+    {
+      "id": 30,
+      "name": "Eren Yeager (Founding Titan)",
+      "power_rating": 91,
+      "hp": 9100,
+      "skills": [
+        { "name": "Rumbling Activation", "power_rating": 97 },
+        { "name": "Titan Summoning", "power_rating": 96 },
+        { "name": "War Hammer Constructs", "power_rating": 95 },
+        { "name": "Founding Titan Scream", "power_rating": 98 },
+        { "name": "Coordinate Control", "power_rating": 99 }
+      ]
+    },
+    {
+      "id": 31,
+      "name": "Akatsuki",
+      "power_rating": 93,
+      "hp": 9300,
+      "skills": [
+        { "name": "Collective Assault", "power_rating": 96 },
+        { "name": "Sealing Jutsu Combo", "power_rating": 95 },
+        { "name": "Elemental Mastery", "power_rating": 94 },
+        { "name": "Shared Vision", "power_rating": 97 },
+        { "name": "Akatsuki Formation", "power_rating": 98 }
+      ]
+    }
+  ]
+}
