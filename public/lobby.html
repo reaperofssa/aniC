@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Battle - Lobby</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000000;
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .background-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.95);
+            border-bottom: 2px solid #333;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(20px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .user-banner {
+            position: relative;
+            padding: 0.8rem 1.5rem;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #1a1a1a, #333);
+            border: 2px solid #444;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+            animation: bannerPulse 3s ease-in-out infinite;
+        }
+
+        .user-banner.verified {
+            background: linear-gradient(135deg, #000, #333, #000);
+            border: 2px solid white;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            animation: verifiedGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes bannerPulse {
+            0%, 100% { box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); }
+            50% { box-shadow: 0 0 20px rgba(255, 255, 255, 0.2); }
+        }
+
+        @keyframes verifiedGlow {
+            0% { box-shadow: 0 0 30px rgba(255, 255, 255, 0.3); }
+            100% { box-shadow: 0 0 50px rgba(255, 255, 255, 0.6); }
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid white;
+            animation: avatarRotate 10s linear infinite;
+        }
+
+        @keyframes avatarRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .user-name {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .verified-badge {
+            color: white;
+            font-size: 1.3rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            animation: badgePulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .currency {
+            display: flex;
+            gap: 1.5rem;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .currency span {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            border: 1px solid #333;
+            transition: all 0.3s ease;
+        }
+
+        .currency span:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .nav {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 0.8rem 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid #333;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-btn:hover {
+            background: white;
+            color: black;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+        }
+
+        .main-content {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .card {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #333;
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        .card:hover {
+            border-color: white;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .card h2 {
+            margin-bottom: 1.5rem;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .equipped-character {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .character-image {
+            width: 180px;
+            height: 180px;
+            border-radius: 20px;
+            margin: 0 auto 1.5rem;
+            border: 3px solid white;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            animation: characterFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes characterFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .character-image:hover {
+            transform: scale(1.05) translateY(-10px);
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.5);
+        }
+
+        .character-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: white;
+        }
+
+        .character-level {
+            color: #ccc;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .world-chat {
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-messages {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+            border-radius: 15px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+
+        .chat-message {
+            margin-bottom: 0.8rem;
+            padding: 0.5rem;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            animation: messageSlide 0.3s ease-out;
+        }
+
+        @keyframes messageSlide {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .chat-username {
+            font-weight: bold;
+            color: white;
+            margin-right: 0.5rem;
+        }
+
+        .chat-username.verified::after {
+            content: '✓';
+            color: white;
+            margin-left: 0.3rem;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+        }
+
+        .chat-text {
+            color: #ccc;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 2px solid #333;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            font-size: 1rem;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: white;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-send {
+            padding: 0.8rem 1.5rem;
+            background: white;
+            color: black;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .chat-send:hover {
+            background: #f0f0f0;
+            transform: scale(1.05);
+        }
+
+        .friends-list {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+        .friend-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #333;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            animation: friendSlide 0.5s ease-out;
+        }
+
+        @keyframes friendSlide {
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .friend-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(10px);
+            border-color: white;
+        }
+
+        .friend-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .friend-info {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .friend-name {
+            font-weight: bold;
+            color: white;
+        }
+
+        .friend-verified {
+            color: white;
+            font-size: 1.1rem;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+        }
+
+        .battle-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .battle-btn {
+            padding: 1.5rem;
+            background: white;
+            color: black;
+            border: none;
+            border-radius: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .battle-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .battle-btn:hover::before {
+            left: 100%;
+        }
+
+        .battle-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.3);
+        }
+
+        .battle-btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid white;
+        }
+
+        .battle-btn.secondary:hover {
+            background: white;
+            color: black;
+        }
+
+        .matchmake-form {
+            display: none;
+            margin-top: 1rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid #333;
+            border-radius: 15px;
+            animation: formSlide 0.3s ease-out;
+        }
+
+        @keyframes formSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .matchmake-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #333;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .matchmake-input:focus {
+            outline: none;
+            border-color: white;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .logout-btn {
+            background: rgba(255, 0, 0, 0.2);
+            color: white;
+            border: 2px solid #ff6666;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .logout-btn:hover {
+            background: #ff6666;
+            color: black;
+            transform: translateY(-2px);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            animation: loadingPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes loadingPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .no-friends, .no-character {
+            text-align: center;
+            color: #666;
+            padding: 2rem;
+        }
+
+        .no-friends a, .no-character a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .no-friends a:hover, .no-character a:hover {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .nav {
+                justify-content: center;
+                width: 100%;
+            }
+            
+            .nav-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .user-info {
+                flex-direction: column;
+                gap: 1rem;
+                width: 100%;
+            }
+            
+            .currency {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                padding: 1.5rem;
+            }
+            
+            .character-image {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .world-chat {
+                height: 300px;
+            }
+            
+            .chat-messages {
+                max-height: 200px;
+            }
+            
+            .friends-list {
+                max-height: 250px;
+            }
+            
+            .nav {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .nav-btn {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-grid"></div>
+    
+    <div class="header">
+        <div class="user-info">
+            <div class="user-banner" id="userBanner">
+                <img id="userAvatar" class="user-avatar" alt="Avatar">
+                <div class="user-name">
+                    <span id="username">Loading...</span>
+                    <span id="verifiedBadge" class="verified-badge" style="display: none;">✓</span>
+                </div>
+            </div>
+            <div class="currency">
+                <span>💰 <span id="coins">0</span></span>
+                <span>💎 <span id="diamonds">0</span></span>
+            </div>
+        </div>
+        <nav class="nav">
+            <a href="profile.html" class="nav-btn">👤 Profile</a>
+            <a href="search.html" class="nav-btn">🔍 Search</a>
+            <a href="vault.html" class="nav-btn">🏛️ Vault</a>
+            <a href="shop.html" class="nav-btn">🛒 Shop</a>
+            <a href="event.html" class="nav-btn">🎉 Event</a>
+            <a href="admin.html" class="nav-btn" id="adminBtn" style="display: none;">⚙️ Admin</a>
+            <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="left-panel">
+            <!-- Equipped Character -->
+            <div class="card">
+                <h2>⚔️ Your Champion</h2>
+                <div class="equipped-character" id="equippedCharacter">
+                    <div class="loading">Loading your character...</div>
+                </div>
+            </div>
+
+            <!-- Battle Options -->
+            <div class="card">
+                <h2>⚔️ Battle Arena</h2>
+                <div class="battle-options">
+                    <button class="battle-btn" onclick="navigateTo('rooms.html')">
+                        🏠 Battle Rooms
+                    </button>
+                    <button class="battle-btn secondary" onclick="showMatchmakeForm()">
+                        🎲 Quick Match
+                    </button>
+                    <div class="matchmake-form" id="matchmakeForm">
+                        <input type="number" class="matchmake-input" id="matchmakeAmount" placeholder="Bet amount" min="1">
+                        <button class="battle-btn" onclick="quickMatch()">Find Match</button>
+                    </div>
+                    <button class="battle-btn secondary" onclick="navigateTo('battle.html')">
+                        ⚔️ Active Battles
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <!-- World Chat -->
+            <div class="card">
+                <h2>💬 World Chat</h2>
+                <div class="world-chat">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="loading">Loading chat...</div>
+                    </div>
+                    <div class="chat-input-container">
+                        <input type="text" class="chat-input" id="chatInput" placeholder="Type your message..." maxlength="200">
+                        <button class="chat-send" onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Friends List -->
+            <div class="card">
+                <h2>👥 Friends</h2>
+                <div class="friends-list" id="friendsList">
+                    <div class="loading">Loading friends...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const authToken = localStorage.getItem('authToken');
+        const userId = localStorage.getItem('userId');
+
+        if (!authToken) {
+            window.location.href = 'login.html';
+        }
+
+        let userProfile = null;
+        let equippedCharacterId = null;
+        let chatMessages = [];
+        let lastChatUpdate = 0;
+
+        // Sound effects
+        const playSound = (type) => {
+            const audio = new Audio();
+            switch(type) {
+                case 'click':
+                    audio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTuR2O/Eeyw';
+                    break;
+                case 'message':
+                    audio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTuR2O/Eeyw';
+                    break;
+                case 'notification':
+                    audio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTuR2O/Eeyw';
+                    break;
+            }
+            audio.volume = 0.3;
+            audio.play().catch(() => {});
+        };
+
+        const navigateTo = (url) => {
+            playSound('click');
+            window.location.href = url;
+        };
+
+        // Real-time updates using WebSocket simulation
+        const startRealTimeUpdates = () => {
+            // Simulate real-time updates every 5 seconds
+            setInterval(() => {
+                loadChatMessages();
+                loadUserProfile();
+                loadFriends();
+            }, 5000);
+        };
+
+        async function loadUserProfile() {
+            try {
+                const response = await fetch('/profile', {
+                    headers: { 'Authorization': authToken }
+                });
+                
+                if (response.ok) {
+                    userProfile = await response.json();
+                    document.getElementById('username').textContent = userProfile.username;
+                    document.getElementById('coins').textContent = userProfile.coins;
+                    document.getElementById('diamonds').textContent = userProfile.diamonds;
+                    
+                    // Set user avatar
+                    const userAvatar = document.getElementById('userAvatar');
+                    userAvatar.src = `https://reaperxxxx-animepfp.hf.space/img?q=${userProfile.characterIds[0] || 1}`;
+                    
+                    // Handle verified status
+                    const userBanner = document.getElementById('userBanner');
+                    const verifiedBadge = document.getElementById('verifiedBadge');
+                    if (userProfile.verified) {
+                        userBanner.classList.add('verified');
+                        verifiedBadge.style.display = 'inline';
+                    }
+                    
+                    // Show admin button if user is admin
+                    if (userProfile.username === 'Reiker') {
+                        document.getElementById('adminBtn').style.display = 'inline-block';
+                    }
+                } else {
+                    logout();
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        async function loadEquippedCharacter() {
+            try {
+                const response = await fetch('/characters', {
+                    headers: { 'Authorization': authToken }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const equippedChar = data.characters.find(char => char.equipped);
+                    
+                    const equippedDiv = document.getElementById('equippedCharacter');
+                    
+                    if (equippedChar) {
+                        equippedCharacterId = equippedChar.id;
+                        equippedDiv.innerHTML = `
+                            <img src="https://reaperxxxx-animepfp.hf.space/img?q=${equippedChar.id}" 
+                                 class="character-image" alt="${equippedChar.name}">
+                            <div class="character-name">${equippedChar.name}</div>
+                            <div class="character-level">Level ${equippedChar.level}</div>
+                            <div style="color: #ccc; margin-top: 0.5rem;">Power: ${equippedChar.power_rating}</div>
+                        `;
+                    } else {
+                        equippedDiv.innerHTML = `
+                            <div class="no-character">
+                                No character equipped<br>
+                                <a href="vault.html">Go to Vault to equip a character</a>
+                            </div>
+                        `;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading equipped character:', error);
+            }
+        }
+
+        async function loadChatMessages() {
+            try {
+                const response = await fetch('/chat', {
+                    headers: { 'Authorization': authToken }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const chatDiv = document.getElementById('chatMessages');
+                    
+                    if (data.messages && data.messages.length > 0) {
+                        // Check for new messages
+                        const newMessages = data.messages.filter(msg => msg.timestamp > lastChatUpdate);
+                        
+                        if (newMessages.length > 0) {
+                            playSound('message');
+                            lastChatUpdate = Math.max(...data.messages.map(msg => msg.timestamp));
+                        }
+                        
+                        chatDiv.innerHTML = data.messages.map(msg => `
+                            <div class="chat-message">
+                                <span class="chat-username ${msg.verified ? 'verified' : ''}">${msg.username}</span>
+                                <span class="chat-text">${msg.message}</span>
+                            </div>
+                        `).join('');
+                        
+                        // Auto scroll to bottom
+                        chatDiv.scrollTop = chatDiv.scrollHeight;
+                    } else {
+                        chatDiv.innerHTML = `
+                            <div style="text-align: center; color: #666; padding: 2rem;">
+                                No messages yet. Be the first to chat!
+                            </div>
+                        `;
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading chat:', error);
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': authToken
+                    },
+                    body: JSON.stringify({ message })
+                });
+                
+                if (response.ok) {
+                    input.value = '';
+                    playSound('click');
+                    loadChatMessages();
+                }
+            } catch (error) {
+                console.error('Error sending message:', error);
+            }
+        }
+
+        async function loadFriends() {
+            try {
+                const response = await fetch('/friends', {
+                    headers: { 'Authorization': authToken }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const friendsList = document.getElementById('friendsList');
+                    
+                    if (data.friends.length === 0) {
+                        friendsList.innerHTML = `
+                            <div class="no-friends">
+                                No friends yet<br>
+                                <a href="search.html">Search for users to add as friends</a>
+                            </div>
+                        `;
+                    } else {
+                        friendsList.innerHTML = data.friends.map(friend => `
+                            <div class="friend-item">
+                                <img src="https://reaperxxxx-animepfp.hf.space/img?q=${Math.floor(Math.random() * 100) + 1}" 
+                                     class="friend-avatar" alt="${friend.username}">
+                                <div class="friend-info">
+                                    <span class="friend-name">${friend.username}</span>
+                                    ${friend.verified ? '<span class="friend-verified">✓</span>' : ''}
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading friends:', error);
+            }
+        }
+
+        function showMatchmakeForm() {
+            playSound('click');
+            const form = document.getElementById('matchmakeForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        async function quickMatch() {
+            const amount = parseInt(document.getElementById('matchmakeAmount').value);
+            
+            if (!amount || amount < 1) {
+                alert('Please enter a valid bet amount');
+                return;
+            }
+            
+            if (!equippedCharacterId) {
+                alert('Please equip a character first');
+                return;
+            }
+            
+            playSound('click');
+            
+            try {
+                const response = await fetch('/battle/matchmake', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': authToken
+                    },
+                    body: JSON.stringify({ amount })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    playSound('notification');
+                    alert(data.message);
+                    window.location.href = 'battle.html';
+                } else {
+                    alert(data.error);
+                }
+            } catch (error) {
+                alert('Error starting matchmaking');
+            }
+        }
+
+        function logout() {
+            playSound('click');
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userId');
+            window.location.href = 'login.html';
+        }
+
+        // Chat input enter key
+        document.getElementById('chatInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Add click sound to all buttons
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON' || e.target.classList.contains('nav-btn')) {
+                playSound('click');
+            }
+        });
+
+        // Load all data
+        loadUserProfile();
+        loadEquippedCharacter();
+        loadChatMessages();
+        loadFriends();
+
+        // Start real-time updates
+        startRealTimeUpdates();
+    </script>
+</body>
+</html>
