@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Battle - Vault</title>
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #000000;
+    min-height: 100vh;
+    color: white;
+    overflow-x: hidden;
+}
+
+.background-grid {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: gridMove 20s linear infinite;
+    z-index: -1;
+}
+
+@keyframes gridMove {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
+}
+
+.header {
+    background: rgba(0, 0, 0, 0.95);
+    border-bottom: 2px solid #333;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(20px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.user-info h1 {
+    font-size: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.currency {
+    display: flex;
+    gap: 1.5rem;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.currency span {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid #333;
+    padding: 0.8rem 1.5rem;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.currency span:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+    border-color: white;
+}
+
+.nav {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.nav-btn {
+    padding: 0.8rem 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid #333;
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.nav-btn:hover {
+    background: white;
+    color: black;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
+}
+
+.main-content {
+    padding: 2rem;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.vault-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    animation: headerSlide 0.8s ease-out;
+}
+
+@keyframes headerSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.vault-title {
+    font-size: 4rem;
+    font-weight: bold;
+    background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    animation: titleGlow 3s ease-in-out infinite;
+}
+
+@keyframes titleGlow {
+    0%, 100% { filter: brightness(1); }
+    50% { filter: brightness(1.3); }
+}
+
+.vault-subtitle {
+    color: #ccc;
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+}
+
+.vault-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.tab-btn {
+    padding: 1.5rem 3rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid #333;
+    border-radius: 20px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.tab-btn.active {
+    background: white;
+    color: black;
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(255, 255, 255, 0.3);
+}
+
+.tab-content {
+    display: none;
+    animation: contentFade 0.5s ease-in-out;
+}
+
+@keyframes contentFade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.characters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2.5rem;
+}
+
+.character-card {
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #333;
+    border-radius: 25px;
+    padding: 2.5rem;
+    backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    animation: cardSlide 0.8s ease-out;
+}
+
+@keyframes cardSlide {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.character-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.character-card:hover::before {
+    left: 100%;
+}
+
+.character-card:hover {
+    transform: translateY(-10px);
+    border-color: white;
+    box-shadow: 0 20px 40px rgba(255, 255, 255, 0.1);
+}
+
+.character-card.equipped {
+    border-color: white;
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
+    animation: equippedGlow 3s ease-in-out infinite;
+}
+
+@keyframes equippedGlow {
+    0%, 100% { box-shadow: 0 0 40px rgba(255, 255, 255, 0.3); }
+    50% { box-shadow: 0 0 60px rgba(255, 255, 255, 0.6); }
+}
+
+.character-card.equipped::before {
+    content: '⚔️ EQUIPPED';
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: white;
+    color: black;
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    z-index: 2;
+    animation: equippedBadge 2s ease-in-out infinite;
+}
+
+@keyframes equippedBadge {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.level-badge {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid #333;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: bold;
+    z-index: 2;
+    animation: levelFloat 3s ease-in-out infinite;
+}
+
+@keyframes levelFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-5px); }
+}
+
+.character-image {
+    width: 180px;
+    height: 180px;
+    border-radius: 20px;
+    margin: 0 auto 2rem;
+    border: 3px solid white;
+    transition: all 0.3s ease;
+    animation: characterFloat 4s ease-in-out infinite;
+}
+
+@keyframes characterFloat {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-8px) rotate(2deg); }
+}
+
+.character-card:hover .character-image {
+    transform: scale(1.1) translateY(-8px);
+    box-shadow: 0 15px 35px rgba(255, 255, 255, 0.3);
+}
+
+.character-info {
+    text-align: center;
+}
+
+.character-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.character-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #333;
+    padding: 1.2rem;
+    border-radius: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: white;
+    transform: translateY(-3px);
+}
+
+.stat-value {
+    font-weight: bold;
+    color: white;
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 1rem;
+    color: #ccc;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.character-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.action-btn {
+    flex: 1;
+    padding: 1.2rem;
+    border: none;
+    border-radius: 15px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.equip-btn {
+    background: rgba(0, 255, 0, 0.2);
+    border: 2px solid #00ff00;
+}
+
+.equip-btn:hover {
+    background: #00ff00;
+    color: black;
+    transform: translateY(-3px);
+}
+
+.equip-btn:disabled {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: #333;
+    color: #666;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.upgrade-btn {
+    background: rgba(0, 0, 255, 0.2);
+    border: 2px solid #0066ff;
+}
+
+.upgrade-btn:hover {
+    background: #0066ff;
+    color: white;
+    transform: translateY(-3px);
+}
+
+.upgrade-info {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #333;
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    animation: upgradeInfoGlow 3s ease-in-out infinite;
+}
+
+@keyframes upgradeInfoGlow {
+    0%, 100% { border-color: #333; }
+    50% { border-color: white; }
+}
+
+.upgrade-cost {
+    color: white;
+    font-weight: bold;
+    font-size: 1.3rem;
+    margin-top: 0.5rem;
+}
+
+.loading {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #666;
+    animation: loadingPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes loadingPulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+}
+
+.no-characters {
+    text-align: center;
+    color: #666;
+    padding: 4rem 2rem;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.no-characters a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.no-characters a:hover {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+}
+
+.success-message {
+    background: rgba(0, 255, 0, 0.1);
+    color: #00ff00;
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    border: 2px solid rgba(0, 255, 0, 0.3);
+    text-align: center;
+    animation: messageSlide 0.5s ease-out;
+}
+
+.error-message {
+    background: rgba(255, 0, 0, 0.1);
+    color: #ff6666;
+    padding: 1.5rem;
+    border-radius: 15px;
+    margin-bottom: 2rem;
+    border: 2px solid rgba(255, 0, 0, 0.3);
+    text-align: center;
+    animation: messageSlide 0.5s ease-out;
+}
+
+@keyframes messageSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 1024px) {
+    .main-content {
+        padding: 1rem;
+    }
+    
+    .header {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+    
+    .nav {
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .characters-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 2rem;
+    }
+    
+    .vault-tabs {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .vault-title {
+        font-size: 3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .characters-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .character-card {
+        padding: 2rem;
+    }
+    
+    .character-image {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .vault-title {
+        font-size: 2.5rem;
+    }
+    
+    .vault-subtitle {
+        font-size: 1.2rem;
+    }
+    
+    .tab-btn {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+    }
+    
+    .currency {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .nav-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        padding: 1rem;
+    }
+    
+    .user-info h1 {
+        font-size: 1.5rem;
+    }
+    
+    .vault-title {
+        font-size: 2rem;
+    }
+    
+    .vault-subtitle {
+        font-size: 1rem;
+    }
+    
+    .characters-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .character-card {
+        padding: 1.5rem;
+    }
+    
+    .character-image {
+        width: 130px;
+        height: 130px;
+    }
+    
+    .character-actions {
+        flex-direction: column;
+    }
+    
+    .tab-btn {
+        padding: 0.8rem 1.5rem;
+        font-size: 0.9rem;
+    }
+    
+    .currency span {
+        padding: 0.6rem 1rem;
+        font-size: 1rem;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="background-grid"></div>
+    <div class="header">
+        <div class="user-info">
+            <h1>🏛️ Character Vault</h1>
+        </div>
+        <div class="currency">
+            <span>💰 <span id="coins">0</span></span>
+            <span>💎 <span id="diamonds">0</span></span>
+        </div>
+        <nav class="nav">
+            <a href="lobby.html" class="nav-btn">🏠 Lobby</a>
+            <a href="profile.html" class="nav-btn">👤 Profile</a>
+            <a href="shop.html" class="nav-btn">🛒 Shop</a>
+            <a href="event.html" class="nav-btn">🎉 Event</a>
+        </nav>
+    </div>
+
+    <div class="main-content">
+        <div class="vault-header">
+            <div class="vault-title">🏛️ CHARACTER VAULT</div>
+            <div class="vault-subtitle">Manage and upgrade your character collection</div>
+        </div>
+
+        <div id="vaultMessage"></div>
+
+        <div class="vault-tabs">
+            <button class="tab-btn active" onclick="switchTab('collection')">🎭 Collection</button>
+            <button class="tab-btn" onclick="switchTab('upgrades')">⬆️ Upgrades</button>
+        </div>
+
+        <!-- Collection Tab -->
+        <div id="collectionTab" class="tab-content active">
+            <div class="characters-grid" id="charactersGrid">
+                <div class="loading">Loading your characters...</div>
+            </div>
+        </div>
+
+        <!-- Upgrades Tab -->
+        <div id="upgradesTab" class="tab-content">
+            <div class="characters-grid" id="upgradesGrid">
+                <div class="loading">Loading upgrade options...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sound effects
+const playSound = (type) => {
+    const audio = new Audio();
+    switch(type) {
+        case 'click':
+            audio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTuR2O/Eeyw';
+            break;
+        case 'success':
+            audio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTuR2O/Eeyw';
+            break;
+        case 'upgrade':
+            audio.src = 'data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBTuR2O/Eeyw';
+            break;
+    }
+    audio.volume = 0.3;
+    audio.play().catch(() => {});
+};
+
+// Add click sound to all buttons
+document.addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON' || e.target.classList.contains('nav-btn')) {
+        playSound('click');
+    }
+});
+        const authToken = localStorage.getItem('authToken');
+        
+        if (!authToken) {
+            window.location.href = 'login.html';
+        }
+
+        let userProfile = null;
+        let characters = [];
+        let upgradeData = [];
+
+        function showMessage(message, isError = false) {
+            const messageDiv = document.getElementById('vaultMessage');
+            messageDiv.innerHTML = `<div class="${isError ? 'error-message' : 'success-message'}">${message}</div>`;
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 5000);
+        }
+
+        function switchTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show/hide content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tab + 'Tab').classList.add('active');
+            
+            if (tab === 'upgrades') {
+                loadUpgradeData();
+            }
+        }
+
+        async function loadUserProfile() {
+            try {
+                const response = await fetch('/profile', {
+                    headers: { 'Authorization': authToken }
+                });
+                
+                if (response.ok) {
+                    userProfile = await response.json();
+                    document.getElementById('coins').textContent = userProfile.coins;
+                    document.getElementById('diamonds').textContent = userProfile.diamonds;
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        async function loadCharacters() {
+            try {
+                const response = await fetch('/characters', {
+                    headers: { 'Authorization': authToken }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    characters = data.characters;
+                    displayCharacters();
+                }
+            } catch (error) {
+                console.error('Error loading characters:', error);
+                document.getElementById('charactersGrid').innerHTML = `
+                    <div class="no-characters">Error loading characters</div>
+                `;
+            }
+        }
+
+        function displayCharacters() {
+            const grid = document.getElementById('charactersGrid');
+            
+            if (characters.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-characters">
+                        No characters in your collection<br>
+                        <a href="shop.html" style="color: #ffd700;">Visit the shop to get characters</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = characters.map(char => `
+                <div class="character-card ${char.equipped ? 'equipped' : ''}">
+                    <div class="level-badge">Level ${char.level}</div>
+                    <img src="https://reaperxxxx-animepfp.hf.space/img?q=${char.id}" 
+                         class="character-image" alt="${char.name}">
+                    <div class="character-info">
+                        <div class="character-name">${char.name}</div>
+                        <div class="character-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">${char.power_rating}</div>
+                                <div class="stat-label">Power</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${char.level}</div>
+                                <div class="stat-label">Level</div>
+                            </div>
+                        </div>
+                        <div class="character-actions">
+                            <button class="action-btn equip-btn" 
+                                    ${char.equipped ? 'disabled' : ''} 
+                                    onclick="equipCharacter(${char.id})">
+                                ${char.equipped ? '⚔️ Equipped' : '⚔️ Equip'}
+                            </button>
+                            <button class="action-btn upgrade-btn" onclick="upgradeCharacter(${char.id})">
+                                ⬆️ Upgrade
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function loadUpgradeData() {
+            try {
+                const response = await fetch('/upgrade-character', {
+                    headers: { 'Authorization': authToken }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    upgradeData = data.characters;
+                    displayUpgrades();
+                }
+            } catch (error) {
+                console.error('Error loading upgrade data:', error);
+                document.getElementById('upgradesGrid').innerHTML = `
+                    <div class="no-characters">Error loading upgrade data</div>
+                `;
+            }
+        }
+
+        function displayUpgrades() {
+            const grid = document.getElementById('upgradesGrid');
+            
+            if (upgradeData.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-characters">
+                        No characters available for upgrade<br>
+                        <small>You need to own characters first</small>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = upgradeData.map(char => `
+                <div class="character-card ${char.equipped ? 'equipped' : ''}">
+                    <div class="level-badge">Level ${char.level}</div>
+                    <img src="https://reaperxxxx-animepfp.hf.space/img?q=${char.characterId}" 
+                         class="character-image" alt="${char.name}">
+                    <div class="character-info">
+                        <div class="character-name">${char.name}</div>
+                        <div class="upgrade-info">
+                            <div>Next Level: ${char.level + 1}</div>
+                            <div class="upgrade-cost">💰 ${char.nextLevelCost} coins</div>
+                        </div>
+                        <div class="character-actions">
+                            <button class="action-btn upgrade-btn" 
+                                    ${userProfile && userProfile.coins >= char.nextLevelCost ? '' : 'disabled'}
+                                    onclick="performUpgrade(${char.characterId})">
+                                ${userProfile && userProfile.coins >= char.nextLevelCost ? 
+                                    '⬆️ Upgrade Now' : '💰 Need More Coins'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function equipCharacter(characterId) {
+            try {
+                const response = await fetch('/equip-character', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': authToken
+                    },
+                    body: JSON.stringify({ characterId })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage(data.message);
+                    loadCharacters();
+                } else {
+                    showMessage(data.error, true);
+                }
+            } catch (error) {
+                showMessage('Error equipping character', true);
+            }
+        }
+
+        async function upgradeCharacter(characterId) {
+            // Switch to upgrades tab and highlight the character
+            switchTab('upgrades');
+            setTimeout(() => {
+                const upgradeCards = document.querySelectorAll('#upgradesGrid .character-card');
+                upgradeCards.forEach(card => {
+                    const img = card.querySelector('.character-image');
+                    if (img && img.src.includes(`q=${characterId}`)) {
+                        card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        card.style.border = '3px solid #ffd700';
+                        setTimeout(() => {
+                            card.style.border = '';
+                        }, 3000);
+                    }
+                });
+            }, 100);
+        }
+
+        async function performUpgrade(characterId) {
+            try {
+                const response = await fetch('/upgrade-character', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': authToken
+                    },
+                    body: JSON.stringify({ characterId })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showMessage(data.message);
+                    loadUserProfile();
+                    loadCharacters();
+                    loadUpgradeData();
+                } else {
+                    showMessage(data.error, true);
+                }
+            } catch (error) {
+                showMessage('Error upgrading character', true);
+            }
+        }
+
+        // Load all data on page load
+        loadUserProfile();
+        loadCharacters();
+        
+        // Refresh data every 30 seconds
+        setInterval(() => {
+            loadUserProfile();
+            loadCharacters();
+        }, 30000);
+    </script>
+</body>
+</html>
